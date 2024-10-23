@@ -4,47 +4,95 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#B8FBE0"
     tools:context="com.movesense.samples.ecgsample.MainActivity">
 
-    <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="495dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
+    <!-- Botón circular a la izquierda -->
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/instructions_text" />
+    <!-- Imagen circular a la derecha (opcional, si es necesario) -->
+    <ImageButton
+        android:id="@+id/circularButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/circular_button"
+        android:contentDescription="Circular button"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/buttonScan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onScanClicked"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Scan"
-            android:visibility="visible" />
+    <ImageButton
+        android:id="@+id/userIcon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/circular_button"
+        android:contentDescription="User icon"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/profile" />
 
-        <Button
-            android:id="@+id/buttonScanStop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onScanStopClicked"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Stop Scan"
-            android:visibility="gone" />
+    <!-- Texto "Connect Device" más abajo -->
+    <TextView
+        android:id="@+id/connectDevice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CONNECT DEVICE"
+        android:textAllCaps="true"
+        android:textColor="#000000"
+        android:textSize="28sp"
+        app:layout_constraintTop_toBottomOf="@id/circularButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:gravity="center" />
 
-        <ListView
-            android:id="@+id/listScanResult"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1" />
-    </LinearLayout>
+    <!-- Botón de Scan debajo del texto -->
+    <Button
+        android:id="@+id/buttonScan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onScanClicked"
+        android:text="Scan"
+        app:layout_constraintTop_toBottomOf="@id/connectDevice"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:visibility="visible" />
+
+    <!-- Lista debajo del botón de Scan -->
+
+    <Button
+        android:id="@+id/buttonScanStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="onScanStopClicked"
+        android:text="Stop Scan"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/connectDevice"
+        tools:visibility="visible" />
+
+    <ListView
+        android:id="@+id/listScanResult"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:background="#B8FBE0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonScan"
+        app:layout_constraintVertical_bias="1.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

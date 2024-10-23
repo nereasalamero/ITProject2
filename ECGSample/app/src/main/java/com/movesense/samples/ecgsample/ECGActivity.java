@@ -2,11 +2,14 @@ package com.movesense.samples.ecgsample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -75,6 +78,10 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ecg);
+
+        ImageButton circularButton = findViewById(R.id.circularButton);
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
+        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
 
         mSwitchECGEnabled = (Switch)findViewById(R.id.switchECGEnabled);
         mSwitchECGEnabled.setOnCheckedChangeListener(this);

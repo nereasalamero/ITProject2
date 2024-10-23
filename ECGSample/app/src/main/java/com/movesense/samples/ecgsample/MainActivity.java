@@ -30,6 +30,16 @@ import java.util.ArrayList;
 
 import io.reactivex.disposables.Disposable;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.widget.ImageButton;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener  {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
@@ -54,6 +64,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ImageButton circularButton = findViewById(R.id.circularButton);
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
+        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
 
         // Init Scan UI
         mScanResultListView = (ListView)findViewById(R.id.listScanResult);
@@ -106,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     Disposable mScanSubscription;
     public void onScanClicked(View view) {
-        findViewById(R.id.buttonScan).setVisibility(View.GONE);
+        findViewById(R.id.buttonScan).setVisibility(View.INVISIBLE);
         findViewById(R.id.buttonScanStop).setVisibility(View.VISIBLE);
 
         // Start with empty list
@@ -157,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         findViewById(R.id.buttonScan).setVisibility(View.VISIBLE);
-        findViewById(R.id.buttonScanStop).setVisibility(View.GONE);
+        findViewById(R.id.buttonScanStop).setVisibility(View.INVISIBLE);
     }
 
 
