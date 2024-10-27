@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="#B8FBE0"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.movesense.samples.ecgsample.ECGActivity"
-    tools:showIn="@layout/activity_ecg">
+    tools:context="com.movesense.samples.ecgsample.HRActivity"
+    tools:showIn="@layout/activity_hr">
 
     <ImageButton
         android:id="@+id/circularButton"
@@ -42,7 +42,7 @@
         android:id="@+id/heartRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ECG"
+        android:text="HEART RATE"
         android:textAllCaps="true"
         android:textColor="#000000"
         android:textSize="28sp"
@@ -52,70 +52,66 @@
         android:layout_marginTop="16dp"
         android:gravity="center" />
 
-    <Switch
-        android:id="@+id/switchECGEnabled"
-        android:layout_width="220dp"
-        android:layout_height="27dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="8dp"
-        android:enabled="false"
-        android:text="Enable ECG"
-        android:textAlignment="textStart"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/heartRate" />
-
     <TextView
-        android:id="@+id/textViewECGLabel"
+        android:id="@+id/textViewHRLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="ECG [mV]"
+        android:text="Heart Rate [bpm]"
         app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintLeft_toLeftOf="@+id/switchECGEnabled"
-        app:layout_constraintRight_toRightOf="@+id/switchECGEnabled"
-        app:layout_constraintTop_toBottomOf="@+id/switchECGEnabled"
+        app:layout_constraintLeft_toLeftOf="@+id/heartRate"
+        app:layout_constraintRight_toRightOf="@+id/heartRate"
+        app:layout_constraintTop_toBottomOf="@+id/heartRate"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1" />
 
     <TextView
-        android:id="@+id/textViewECG"
+        android:id="@+id/textViewHR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="17dp"
         android:layout_marginLeft="17dp"
         android:text="--"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewECGLabel"
-        app:layout_constraintLeft_toRightOf="@+id/textViewECGLabel" />
+        app:layout_constraintBottom_toBottomOf="@+id/textViewHRLabel"
+        app:layout_constraintLeft_toRightOf="@+id/textViewHRLabel" />
+
+    <TextView
+        android:id="@+id/textViewIBILabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="15dp"
+        android:text="Beat interval [ms]"
+        app:layout_constraintRight_toLeftOf="@+id/textViewHR"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHRLabel"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/textViewIBI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="9dp"
+        android:text="--"
+        app:layout_constraintLeft_toRightOf="@+id/textViewIBILabel"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHR"
+        tools:layout_constraintTop_creator="1" />
 
     <com.jjoe64.graphview.GraphView
-        android:id="@+id/graphECG"
+        android:id="@+id/graphHR"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewECGLabel"
+        app:layout_constraintTop_toBottomOf="@+id/textViewIBILabel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1" />
-
-
-    <Spinner
-        android:id="@+id/spinnerSampleRates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintTop_toBottomOf="@id/heartRate"
-        app:layout_constraintLeft_toRightOf="@+id/switchECGEnabled"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

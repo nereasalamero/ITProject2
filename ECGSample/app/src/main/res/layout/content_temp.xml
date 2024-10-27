@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#B8FBE0"
-    tools:context="com.movesense.samples.ecgsample.MainActivity">
-
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.movesense.samples.ecgsample.TempActivity"
+    tools:showIn="@layout/activity_temp">
 
     <ImageButton
         android:id="@+id/circularButton"
@@ -37,56 +38,57 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/profile" />
 
-    <!-- Texto "Connect Device" más abajo -->
     <TextView
-        android:id="@+id/textDocsense"
+        android:id="@+id/linearAcceleration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DOCSENSE"
+        android:text="TEMPERATURE"
         android:textAllCaps="true"
         android:textColor="#000000"
         android:textSize="28sp"
         app:layout_constraintTop_toBottomOf="@id/circularButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:gravity="center" />
 
-    <!-- Botón de Scan debajo del texto -->
-    <Button
-        android:id="@+id/buttonHeartRate"
-        android:layout_width="360dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="40dp"
-        android:onClick="onHRClicked"
-        android:text="Heart Rate"
-        android:visibility="visible"
-        app:layout_constraintLeft_toLeftOf="@+id/textDocsense"
-        app:layout_constraintRight_toRightOf="@+id/textDocsense"
-        app:layout_constraintTop_toBottomOf="@+id/textDocsense" />
+    <TextView
+        android:id="@+id/textViewTempLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Temperature [ºC]"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintLeft_toLeftOf="@+id/linearAcceleration"
+        app:layout_constraintRight_toRightOf="@+id/linearAcceleration"
+        app:layout_constraintTop_toBottomOf="@+id/linearAcceleration"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
-    <Button
-        android:id="@+id/buttonECG"
-        android:layout_width="360dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="30dp"
-        android:onClick="onECGClicked"
-        android:text="Electrocardiography"
-        android:visibility="visible"
-        app:layout_constraintLeft_toLeftOf="@+id/buttonHeartRate"
-        app:layout_constraintRight_toRightOf="@+id/buttonHeartRate"
-        app:layout_constraintTop_toBottomOf="@+id/buttonHeartRate" />
+    <TextView
+        android:id="@+id/textViewTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginLeft="17dp"
+        android:text="--"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewTempLabel"
+        app:layout_constraintLeft_toRightOf="@+id/textViewTempLabel" />
 
-    <Button
-        android:id="@+id/buttonTmp"
-        android:layout_width="360dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="30dp"
-        android:onClick="onTempClicked"
-        android:text="Temperature"
-        android:visibility="visible"
-        app:layout_constraintLeft_toLeftOf="@+id/buttonECG"
-        app:layout_constraintRight_toRightOf="@+id/buttonECG"
-        app:layout_constraintTop_toBottomOf="@+id/buttonECG" />
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graphTemp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTempLabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
