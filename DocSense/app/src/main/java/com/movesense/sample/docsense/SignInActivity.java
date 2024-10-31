@@ -33,5 +33,9 @@ public class SignInActivity extends AppCompatActivity {
             Toast.makeText(this, "Please, fill all fields.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        Intent intent = new Intent(SignInActivity.this, ProfileActivity.class);
+        intent.putExtra("USERNAME", username); // Pass the username as an extra
+        startActivity(intent);
     }
 }
