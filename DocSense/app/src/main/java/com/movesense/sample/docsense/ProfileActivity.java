@@ -21,7 +21,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Display the welcome message with the username
         if (username != null) {
-            welcomeText.setText("Welcome " + username + "!");
+            welcomeText.setText("Welcome " + username + "to your profile !");
         }
     }
 }
