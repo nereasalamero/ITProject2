@@ -2,9 +2,11 @@ package com.movesense.samples.ecgsample;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,8 @@ public class TempActivity extends AppCompatActivity
     private int mDataPointsAppended = 0;
     private MdsSubscription mTempSubscription;
 
+    private TextView textNow, text1Day, text1Week, text1Month;
+
     public static final String URI_EVENTLISTENER = "suunto://MDS/EventListener";
     public static final String SCHEME_PREFIX = "suunto://";
 
@@ -71,6 +75,8 @@ public class TempActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getAndSetUpClickListeners();
+
         // Find serial in opening intent
         Intent intent = getIntent();
         connectedSerial = intent.getStringExtra(SERIAL);
@@ -88,7 +94,43 @@ public class TempActivity extends AppCompatActivity
         graph.getViewport().setMaxY(50);
 
         // Start by getting Temp info
-        fetchTempInfo(graph);
+        fetchTempInfo(graph);// Configurar los listeners de clic para cada TextView
+    }
+
+    private void getAndSetUpClickListeners() {
+        // Obtener las referencias de los TextViews
+        textNow = findViewById(R.id.textNow);
+        text1Day = findViewById(R.id.text1Day);
+        text1Week = findViewById(R.id.text1Week);
+        text1Month = findViewById(R.id.text1Month);
+
+        textNow.setTextColor(Color.BLUE);
+
+        setUpClickListener(textNow);
+        setUpClickListener(text1Day);
+        setUpClickListener(text1Week);
+        setUpClickListener(text1Month);
+    }
+
+    private void setUpClickListener(final TextView selectedTextView) {
+        selectedTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Cambiar el color de todos los TextViews a gris
+                resetTextColors();
+
+                // Poner el texto seleccionado en azul
+                selectedTextView.setTextColor(Color.BLUE);
+            }
+        });
+    }
+
+    // Método para poner todos los TextViews en gris
+    private void resetTextColors() {
+        textNow.setTextColor(Color.GRAY);
+        text1Day.setTextColor(Color.GRAY);
+        text1Week.setTextColor(Color.GRAY);
+        text1Month.setTextColor(Color.GRAY);
     }
 
     @Override

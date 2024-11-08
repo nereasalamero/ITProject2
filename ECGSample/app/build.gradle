@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 31
+    compileSdk 33
     defaultConfig {
         applicationId "com.movesense.samples.ecgsample2"
         minSdkVersion 21
@@ -62,7 +62,7 @@ dependencies {
     })
 
     // RxAndroidBle
-    
+
 
     // Movesense .aar lib
     implementation(name: 'mdslib', version: '3.27.0-release', ext: 'aar')
