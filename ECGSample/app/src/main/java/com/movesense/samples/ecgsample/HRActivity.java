@@ -54,6 +54,7 @@ public class HRActivity extends AppCompatActivity
     private MdsSubscription mHRSubscription;
 
     private TextView textNow, text1Day, text1Week, text1Month;
+    private TextView textViewHRLabel, textViewHR, textViewIBILabel, textViewIBI;
 
     public static final String URI_EVENTLISTENER = "suunto://MDS/EventListener";
     public static final String SCHEME_PREFIX = "suunto://";
@@ -78,6 +79,11 @@ public class HRActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        textViewHRLabel = findViewById(R.id.textViewHRLabel);
+        textViewIBILabel = findViewById(R.id.textViewIBILabel);
+        textViewHR = findViewById(R.id.textViewHR);
+        textViewIBI = findViewById(R.id.textViewIBI);
 
         getAndSetUpClickListeners();
 
@@ -135,6 +141,18 @@ public class HRActivity extends AppCompatActivity
 
                 // Poner el texto seleccionado en azul
                 selectedTextView.setTextColor(Color.BLUE);
+                if (v.getId() == R.id.textNow) {
+                    textViewHR.setVisibility(View.VISIBLE);
+                    textViewIBI.setVisibility(View.VISIBLE);
+                    textViewHRLabel.setVisibility(View.VISIBLE);
+                    textViewIBILabel.setVisibility(View.VISIBLE);
+                }
+                else {
+                    textViewHR.setVisibility(View.GONE);
+                    textViewIBI.setVisibility(View.GONE);
+                    textViewIBILabel.setVisibility(View.GONE);
+                    textViewHRLabel.setVisibility(View.GONE);
+                }
             }
         });
     }

@@ -56,6 +56,7 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
     private MdsSubscription mECGSubscription;
 
     private TextView textNow, text1Day, text1Week, text1Month;
+    private TextView textViewECGLabel, textViewECG;
 
     public static final String URI_EVENTLISTENER = "suunto://MDS/EventListener";
     public static final String SCHEME_PREFIX = "suunto://";
@@ -91,6 +92,9 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        textViewECGLabel = findViewById(R.id.textViewECGLabel);
+        textViewECG = findViewById(R.id.textViewECG);
 
         getAndSetUpClickListeners();
 
@@ -154,6 +158,18 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
 
                 // Poner el texto seleccionado en azul
                 selectedTextView.setTextColor(Color.BLUE);
+                if (v.getId() == R.id.textNow) {
+                    textViewECG.setVisibility(View.VISIBLE);
+                    textViewECGLabel.setVisibility(View.VISIBLE);
+                    mSwitchECGEnabled.setVisibility(View.VISIBLE);
+                    mSpinnerSampleRates.setVisibility(View.VISIBLE);
+                }
+                else {
+                    textViewECG.setVisibility(View.GONE);
+                    textViewECGLabel.setVisibility(View.GONE);
+                    mSwitchECGEnabled.setVisibility(View.GONE);
+                    mSpinnerSampleRates.setVisibility(View.GONE);
+                }
             }
         });
     }

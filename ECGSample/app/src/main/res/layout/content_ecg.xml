@@ -103,6 +103,22 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1" />
 
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graphECGHistory"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="55dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/textViewECGLabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
 
     <Spinner
         android:id="@+id/spinnerSampleRates"
