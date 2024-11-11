@@ -37,7 +37,15 @@ public class ApiController {
         System.out.println("Start: " + startTs);
         System.out.println("End: " + endTs);
         System.out.println("Limit: " + limit);
-        return loadJsonResponse("classpath:static/dia_temperature.json");
+        if (keys.equals("temperature")) {
+            return loadJsonResponse("classpath:static/temperature.json");
+        }
+        else if (keys.equals("heart_beat")) {
+            return loadJsonResponse("classpath:static/heart_beat.json");
+        }
+        else {
+            return loadJsonResponse("classpath:static/ecg.json");
+        }
     }
 
     // Método auxiliar para cargar JSON desde un archivo

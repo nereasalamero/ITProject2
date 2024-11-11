@@ -11,9 +11,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.gson.Gson;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
@@ -26,6 +31,7 @@ import com.movesense.mds.MdsResponseListener;
 import com.movesense.mds.MdsSubscription;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -33,8 +39,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -43,6 +52,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 public class TempActivity extends AppCompatActivity {
     private static final int GRAPH_WINDOW_WIDTH = 100;
@@ -53,15 +66,16 @@ public class TempActivity extends AppCompatActivity {
     String connectedSerial;
 
     private LineGraphSeries<DataPoint> mSeriesTemp;
-    //private LineGraphSeries<DataPoint> mSeriesTempHistory;
     private int mDataPointsAppended = 0;
     private MdsSubscription mTempSubscription;
 
     private TextView textNow, text1Day, text1Week, text1Month;
     private TextView textViewTempLabel, textViewTemp;
-    private GraphView graph, graphHistory;
+    private GraphView graph;
+    LineChart graphHistory;
 
     private DataFetcher dataFetcher;
+    private GraphPainter graphPainter;
 
     public static final String URI_EVENTLISTENER = "suunto://MDS/EventListener";
     public static final String SCHEME_PREFIX = "suunto://";
@@ -75,10 +89,6 @@ public class TempActivity extends AppCompatActivity {
 
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-    private enum Period {
-        DAY, WEEK, MONTH
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         s_INSTANCE = this;
@@ -90,10 +100,11 @@ public class TempActivity extends AppCompatActivity {
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
         circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         dataFetcher = new DataFetcher();
+        graphPainter = new GraphPainter("Temp: ", "°C");
 
         textViewTempLabel = findViewById(R.id.textViewTempLabel);
         textViewTemp = findViewById(R.id.textViewTemp);
@@ -117,18 +128,9 @@ public class TempActivity extends AppCompatActivity {
         graph.getViewport().setMaxY(50);
 
         graphHistory = findViewById(R.id.graphTempHistory);
-        /*mSeriesTempHistory = new LineGraphSeries<>();
-        graphHistory.addSeries(mSeriesTempHistory);
-        graphHistory.getViewport().setXAxisBoundsManual(true);
-        graphHistory.getViewport().setMinX(0);
-        graphHistory.getViewport().setMaxX(GRAPH_WINDOW_WIDTH);
-
-        graphHistory.getViewport().setYAxisBoundsManual(true);
-        graphHistory.getViewport().setMinY(0);
-        graphHistory.getViewport().setMaxY(50);*/
 
         // Start by getting Temp info
-        fetchTempInfo(graph);// Configurar los listeners de clic para cada TextView
+        fetchTempInfo();
     }
 
     @Override
@@ -151,15 +153,16 @@ public class TempActivity extends AppCompatActivity {
         textNow.setTextColor(Color.BLUE);
 
         setUpClickListener(textNow, null);
-        setUpClickListener(text1Day, Period.DAY);
-        setUpClickListener(text1Week, Period.WEEK);
-        setUpClickListener(text1Month, Period.MONTH);
+        setUpClickListener(text1Day, GraphPainter.Period.DAY);
+        setUpClickListener(text1Week, GraphPainter.Period.WEEK);
+        setUpClickListener(text1Month, GraphPainter.Period.MONTH);
     }
 
-    private void setUpClickListener(final TextView selectedTextView, Period period) {
+    private void setUpClickListener(final TextView selectedTextView, GraphPainter.Period period) {
         selectedTextView.setOnClickListener(v -> {
             // Cambiar el color de todos los TextViews a gris
             resetTextColors();
+            graphPainter.setCurrentPeriod(period);
 
             // Poner el texto seleccionado en azul
             selectedTextView.setTextColor(Color.BLUE);
@@ -186,49 +189,34 @@ public class TempActivity extends AppCompatActivity {
         text1Month.setTextColor(Color.GRAY);
     }
 
-    private void fetchAndDisplayData(Period period) {
-        long[] timestamps = getTimestampsForPeriod(period);
+    private void fetchAndDisplayData(GraphPainter.Period period) {
+        long[] timestamps = graphPainter.getTimestampsForPeriod(period);
         long startTs = timestamps[0];
         long endTs = timestamps[1];
 
-        // Llama a la función de autenticación y obtiene los datos directamente
-        //try {
-            //JSONArray temperatureData;
-            runOnUiThread(() -> {
-                if (graph.getVisibility() == (View.GONE)) {
-                    Toast.makeText(getApplicationContext(), "Starting to ask the token", Toast.LENGTH_LONG).show();
-                }
-            });
-
-            dataFetcher.authenticateAndFetchData(startTs, endTs,"temperature",
-                    "e26e2190-7659-11ef-bb3c-c31935dd788d", createTemperatureCallback(startTs, endTs));
-
-            /*if (temperatureData != null) {
-                updateGraph(temperatureData);
-            } else {
-                Toast.makeText(this, "Error fetching data", Toast.LENGTH_SHORT).show();
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }*/
+        dataFetcher.authenticateAndFetchData(startTs, endTs,"temperature",
+        "e26e2190-7659-11ef-bb3c-c31935dd788d", createTemperatureCallback(startTs, endTs));
     }
 
     private Callback createTemperatureCallback(long startTs, long endTs) {
         return new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(LOG_TAG, "Failure: ", e);
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if (response.isSuccessful()) {
                     try {
-                        JSONObject jsonResponse = new JSONObject(response.body().string());
-                        JSONArray temperatureData = jsonResponse.getJSONArray("temperature");
-                        updateGraph(temperatureData, startTs, endTs);
+                        if (response.body() != null) {
+                            JSONObject jsonResponse = new JSONObject(response.body().string());
+                            JSONArray temperatureData = jsonResponse.getJSONArray("temperature");
+                            graphPainter.updateGraph(s_INSTANCE, graphHistory, temperatureData,
+                                    startTs, endTs);
+                        }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e(LOG_TAG, "Failure: ", e);
                     }
                 } else {
                     System.out.println("Error en consulta de datos: " + response.code());
@@ -237,81 +225,7 @@ public class TempActivity extends AppCompatActivity {
         };
     }
 
-    private long[] getTimestampsForPeriod(Period period) {
-        Calendar calendar = Calendar.getInstance();
-        long endTs = calendar.getTimeInMillis();
-
-        switch (period) {
-            case DAY:
-                calendar.add(Calendar.DAY_OF_YEAR, -1);
-                break;
-            case WEEK:
-                calendar.add(Calendar.WEEK_OF_YEAR, -1);
-                break;
-            case MONTH:
-                calendar.add(Calendar.MONTH, -1);
-                break;
-        }
-
-        long startTs = calendar.getTimeInMillis();
-        return new long[]{startTs, endTs};
-    }
-
-    private void updateGraph(JSONArray temperatureData, long startTs, long endTs) {
-        runOnUiThread(() -> {
-            // Limpia el gráfico antes de agregar nuevos datos
-            graphHistory.removeAllSeries();
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
-
-            // Verificar si hay datos para agregar
-            Log.d("TemperatureData", "Length of data: " + temperatureData.length());
-
-            // Recorre los datos de temperatura y los agrega al gráfico
-            for (int i = 0; i < temperatureData.length(); i++) {
-                try {
-                    JSONObject dataPoint = temperatureData.getJSONObject(i);
-                    long timestamp = dataPoint.getLong("ts"); // El timestamp ya está en milisegundos
-                    String valueString = dataPoint.getString("value"); // Obtener el valor como cadena
-
-                    // Convertir el valor de cadena a double
-                    double value = Double.parseDouble(valueString);
-
-                    // Verificar el valor del timestamp y el valor
-                    Log.d("TemperatureData", "Timestamp: " + timestamp + ", Value: " + value);
-
-                    // Agrega los datos al gráfico
-                    series.appendData(new DataPoint(timestamp, value), true, temperatureData.length());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Configura el gráfico
-            graphHistory.addSeries(series);
-            series.setThickness(5); // Ajusta el grosor de la línea
-
-            // Configura el rango del eje Y (entre 0 y 50)
-            graphHistory.getViewport().setYAxisBoundsManual(true);
-            graphHistory.getViewport().setMinY(0);
-            graphHistory.getViewport().setMaxY(50);
-
-            // Configura el rango del eje X para mostrar un periodo fijo (día, semana, mes)
-            graphHistory.getViewport().setXAxisBoundsManual(true);
-            graphHistory.getViewport().setMinX(startTs);  // Fecha de inicio
-            graphHistory.getViewport().setMaxX(endTs);    // Fecha de fin
-
-            // Configura el formato de las fechas en el eje X
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            graphHistory.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext(), sdf));
-
-            // Configura que el gráfico no se pueda desplazar ni hacer zoom
-            graphHistory.getViewport().setScalable(false);
-            graphHistory.getViewport().setScrollable(false);
-        });
-    }
-
-
-    private void fetchTempInfo(GraphView graph) {
+    private void fetchTempInfo() {
         String uri = SCHEME_PREFIX + connectedSerial + URI_MEAS_TEMP_INFO;
 
         getMDS().get(uri, null, new MdsResponseListener() {

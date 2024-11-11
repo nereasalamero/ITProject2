@@ -15,9 +15,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.google.gson.Gson;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -27,6 +29,9 @@ import com.movesense.mds.MdsException;
 import com.movesense.mds.MdsNotificationListener;
 import com.movesense.mds.MdsResponseListener;
 import com.movesense.mds.MdsSubscription;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,6 +60,11 @@ public class HRActivity extends AppCompatActivity
 
     private TextView textNow, text1Day, text1Week, text1Month;
     private TextView textViewHRLabel, textViewHR, textViewIBILabel, textViewIBI;
+    private GraphView graph;
+    LineChart graphHistory;
+
+    private DataFetcher dataFetcher;
+    private GraphPainter graphPainter;
 
     public static final String URI_EVENTLISTENER = "suunto://MDS/EventListener";
     public static final String SCHEME_PREFIX = "suunto://";
@@ -80,6 +90,9 @@ public class HRActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        dataFetcher = new DataFetcher();
+        graphPainter = new GraphPainter("HR: ", "bpm");
+
         textViewHRLabel = findViewById(R.id.textViewHRLabel);
         textViewIBILabel = findViewById(R.id.textViewIBILabel);
         textViewHR = findViewById(R.id.textViewHR);
@@ -92,8 +105,8 @@ public class HRActivity extends AppCompatActivity
         connectedSerial = intent.getStringExtra(SERIAL);
 
         // Set HR graph
-        GraphView graph = (GraphView) findViewById(R.id.graphHR);
-        mSeriesHR = new LineGraphSeries<DataPoint>();
+        graph = findViewById(R.id.graphHR);
+        mSeriesHR = new LineGraphSeries<>();
         graph.addSeries(mSeriesHR);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
@@ -103,8 +116,10 @@ public class HRActivity extends AppCompatActivity
         graph.getViewport().setMinY(0);
         graph.getViewport().setMaxY(200);
 
+        graphHistory = findViewById(R.id.graphHRHistory);
+
         // Start by getting HR info
-        fetchHRInfo(graph);
+        fetchHRInfo();
     }
 
     @Override
@@ -126,33 +141,36 @@ public class HRActivity extends AppCompatActivity
 
         textNow.setTextColor(Color.BLUE);
 
-        setUpClickListener(textNow);
-        setUpClickListener(text1Day);
-        setUpClickListener(text1Week);
-        setUpClickListener(text1Month);
+        setUpClickListener(textNow, null);
+        setUpClickListener(text1Day, GraphPainter.Period.DAY);
+        setUpClickListener(text1Week, GraphPainter.Period.WEEK);
+        setUpClickListener(text1Month, GraphPainter.Period.MONTH);
     }
 
-    private void setUpClickListener(final TextView selectedTextView) {
-        selectedTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Cambiar el color de todos los TextViews a gris
-                resetTextColors();
+    private void setUpClickListener(final TextView selectedTextView, GraphPainter.Period period) {
+        selectedTextView.setOnClickListener(v -> {
+            // Cambiar el color de todos los TextViews a gris
+            resetTextColors();
+            graphPainter.setCurrentPeriod(period);
 
-                // Poner el texto seleccionado en azul
-                selectedTextView.setTextColor(Color.BLUE);
-                if (v.getId() == R.id.textNow) {
-                    textViewHR.setVisibility(View.VISIBLE);
-                    textViewIBI.setVisibility(View.VISIBLE);
-                    textViewHRLabel.setVisibility(View.VISIBLE);
-                    textViewIBILabel.setVisibility(View.VISIBLE);
-                }
-                else {
-                    textViewHR.setVisibility(View.GONE);
-                    textViewIBI.setVisibility(View.GONE);
-                    textViewIBILabel.setVisibility(View.GONE);
-                    textViewHRLabel.setVisibility(View.GONE);
-                }
+            // Poner el texto seleccionado en azul
+            selectedTextView.setTextColor(Color.BLUE);
+            if (v.getId() == R.id.textNow) {
+                textViewHR.setVisibility(View.VISIBLE);
+                textViewIBI.setVisibility(View.VISIBLE);
+                textViewHRLabel.setVisibility(View.VISIBLE);
+                textViewIBILabel.setVisibility(View.VISIBLE);
+                graph.setVisibility(View.VISIBLE);
+                graphHistory.setVisibility(View.GONE);
+            }
+            else {
+                textViewHR.setVisibility(View.GONE);
+                textViewIBI.setVisibility(View.GONE);
+                textViewIBILabel.setVisibility(View.GONE);
+                textViewHRLabel.setVisibility(View.GONE);
+                graph.setVisibility(View.GONE);
+                graphHistory.setVisibility(View.VISIBLE);
+                fetchAndDisplayData(period);
             }
         });
     }
@@ -165,7 +183,43 @@ public class HRActivity extends AppCompatActivity
         text1Month.setTextColor(Color.GRAY);
     }
 
-    private void fetchHRInfo(GraphView graph) {
+    private void fetchAndDisplayData(GraphPainter.Period period) {
+        long[] timestamps = graphPainter.getTimestampsForPeriod(period);
+        long startTs = timestamps[0];
+        long endTs = timestamps[1];
+
+        dataFetcher.authenticateAndFetchData(startTs, endTs,"heart_beat",
+                "e26e2190-7659-11ef-bb3c-c31935dd788d", createHRCallback(startTs, endTs));
+    }
+
+    private Callback createHRCallback(long startTs, long endTs) {
+        return new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(LOG_TAG, "Failure: ", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful()) {
+                    try {
+                        if (response.body() != null) {
+                            JSONObject jsonResponse = new JSONObject(response.body().string());
+                            JSONArray hrData = jsonResponse.getJSONArray("heart_beat");
+                            graphPainter.updateGraph(s_INSTANCE, graphHistory, hrData,
+                                    startTs, endTs);
+                        }
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, "Failure: ", e);
+                    }
+                } else {
+                    System.out.println("Error en consulta de datos: " + response.code());
+                }
+            }
+        };
+    }
+
+    private void fetchHRInfo() {
         String uri = SCHEME_PREFIX + connectedSerial + URI_MEAS_HR_INFO;
 
         getMDS().get(uri, null, new MdsResponseListener() {
@@ -196,7 +250,6 @@ public class HRActivity extends AppCompatActivity
 
         // Clear graph
         mSeriesHR.resetData(new DataPoint[0]);
-        final GraphView graph = (GraphView) findViewById(R.id.graphHR);
         graph.getViewport().setMinX(0);
         graph.getViewport().setMaxX(GRAPH_WINDOW_WIDTH);
         mDataPointsAppended = 0;

@@ -16,9 +16,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.google.gson.Gson;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -29,6 +31,9 @@ import com.movesense.mds.MdsNotificationListener;
 import com.movesense.mds.MdsResponseListener;
 import com.movesense.mds.MdsSubscription;
 import com.movesense.mds.internal.connectivity.MovesenseConnectedDevices;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +62,11 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
 
     private TextView textNow, text1Day, text1Week, text1Month;
     private TextView textViewECGLabel, textViewECG;
+    private GraphView graph;
+    LineChart graphHistory;
+
+    private DataFetcher dataFetcher;
+    private GraphPainter graphPainter;
 
     public static final String URI_EVENTLISTENER = "suunto://MDS/EventListener";
     public static final String SCHEME_PREFIX = "suunto://";
@@ -85,13 +95,16 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
         circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
 
-        mSwitchECGEnabled = (Switch)findViewById(R.id.switchECGEnabled);
+        mSwitchECGEnabled = findViewById(R.id.switchECGEnabled);
         mSwitchECGEnabled.setOnCheckedChangeListener(this);
 
-        mSpinnerSampleRates = (Spinner)findViewById(R.id.spinnerSampleRates);
+        mSpinnerSampleRates = findViewById(R.id.spinnerSampleRates);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        dataFetcher = new DataFetcher();
+        graphPainter = new GraphPainter("ECG: ", "mV");
 
         textViewECGLabel = findViewById(R.id.textViewECGLabel);
         textViewECG = findViewById(R.id.textViewECG);
@@ -102,15 +115,14 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
         Intent intent = getIntent();
         connectedSerial = intent.getStringExtra(SERIAL);
 
-
         // Set SampleRate mSpinnerSampleRates
         mSpinnerAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line, mSpinnerRates);
         mSpinnerSampleRates.setAdapter(mSpinnerAdapter);
 
         // Set ECG graph
-        GraphView graph = (GraphView) findViewById(R.id.graphECG);
-        mSeriesECG = new LineGraphSeries<DataPoint>();
+        graph = findViewById(R.id.graphECG);
+        mSeriesECG = new LineGraphSeries<>();
         graph.addSeries(mSeriesECG);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
@@ -119,6 +131,8 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(-2000);
         graph.getViewport().setMaxY(2000);
+
+        graphHistory = findViewById(R.id.graphECGHistory);
 
         // Start by getting ECG info
         fetchECGInfo();
@@ -143,33 +157,36 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
 
         textNow.setTextColor(Color.BLUE);
 
-        setUpClickListener(textNow);
-        setUpClickListener(text1Day);
-        setUpClickListener(text1Week);
-        setUpClickListener(text1Month);
+        setUpClickListener(textNow, null);
+        setUpClickListener(text1Day, GraphPainter.Period.DAY);
+        setUpClickListener(text1Week, GraphPainter.Period.WEEK);
+        setUpClickListener(text1Month, GraphPainter.Period.MONTH);
     }
 
-    private void setUpClickListener(final TextView selectedTextView) {
-        selectedTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Cambiar el color de todos los TextViews a gris
-                resetTextColors();
+    private void setUpClickListener(final TextView selectedTextView, GraphPainter.Period period) {
+        selectedTextView.setOnClickListener(v -> {
+            // Cambiar el color de todos los TextViews a gris
+            resetTextColors();
+            graphPainter.setCurrentPeriod(period);
 
-                // Poner el texto seleccionado en azul
-                selectedTextView.setTextColor(Color.BLUE);
-                if (v.getId() == R.id.textNow) {
-                    textViewECG.setVisibility(View.VISIBLE);
-                    textViewECGLabel.setVisibility(View.VISIBLE);
-                    mSwitchECGEnabled.setVisibility(View.VISIBLE);
-                    mSpinnerSampleRates.setVisibility(View.VISIBLE);
-                }
-                else {
-                    textViewECG.setVisibility(View.GONE);
-                    textViewECGLabel.setVisibility(View.GONE);
-                    mSwitchECGEnabled.setVisibility(View.GONE);
-                    mSpinnerSampleRates.setVisibility(View.GONE);
-                }
+            // Poner el texto seleccionado en azul
+            selectedTextView.setTextColor(Color.BLUE);
+            if (v.getId() == R.id.textNow) {
+                textViewECG.setVisibility(View.VISIBLE);
+                textViewECGLabel.setVisibility(View.VISIBLE);
+                mSwitchECGEnabled.setVisibility(View.VISIBLE);
+                mSpinnerSampleRates.setVisibility(View.VISIBLE);
+                graph.setVisibility(View.VISIBLE);
+                graphHistory.setVisibility(View.GONE);
+            }
+            else {
+                textViewECG.setVisibility(View.GONE);
+                textViewECGLabel.setVisibility(View.GONE);
+                mSwitchECGEnabled.setVisibility(View.GONE);
+                mSpinnerSampleRates.setVisibility(View.GONE);
+                graph.setVisibility(View.GONE);
+                graphHistory.setVisibility(View.VISIBLE);
+                fetchAndDisplayData(period);
             }
         });
     }
@@ -180,6 +197,42 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
         text1Day.setTextColor(Color.GRAY);
         text1Week.setTextColor(Color.GRAY);
         text1Month.setTextColor(Color.GRAY);
+    }
+
+    private void fetchAndDisplayData(GraphPainter.Period period) {
+        long[] timestamps = graphPainter.getTimestampsForPeriod(period);
+        long startTs = timestamps[0];
+        long endTs = timestamps[1];
+
+        dataFetcher.authenticateAndFetchData(startTs, endTs,"ecg",
+                "e26e2190-7659-11ef-bb3c-c31935dd788d", createECGCallback(startTs, endTs));
+    }
+
+    private Callback createECGCallback(long startTs, long endTs) {
+        return new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(LOG_TAG, "Failure: ", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful()) {
+                    try {
+                        if (response.body() != null) {
+                            JSONObject jsonResponse = new JSONObject(response.body().string());
+                            JSONArray ecgData = jsonResponse.getJSONArray("ecg");
+                            graphPainter.updateGraph(s_INSTANCE, graphHistory, ecgData,
+                                    startTs, endTs);
+                        }
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, "Failure: ", e);
+                    }
+                } else {
+                    System.out.println("Error en consulta de datos: " + response.code());
+                }
+            }
+        };
     }
 
     private void fetchECGInfo() {
@@ -225,9 +278,9 @@ public class ECGActivity extends AppCompatActivity implements CompoundButton.OnC
         final int GRAPH_WINDOW_WIDTH = sampleRate*3;
         String strContract = sb.append("{\"Uri\": \"").append(connectedSerial).append(URI_ECG_ROOT).append(sampleRate).append("\"}").toString();
         Log.d(LOG_TAG, strContract);
+
         // Clear graph
         mSeriesECG.resetData(new DataPoint[0]);
-        final GraphView graph = (GraphView) findViewById(R.id.graphECG);
         graph.getViewport().setMinX(0);
         graph.getViewport().setMaxX(GRAPH_WINDOW_WIDTH);
         mDataPointsAppended = 0;
