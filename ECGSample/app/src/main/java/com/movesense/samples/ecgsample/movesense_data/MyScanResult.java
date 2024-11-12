@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample;
+package com.movesense.samples.ecgsample.movesense_data;
 
 import com.polidea.rxandroidble2.RxBleDevice;
 import com.polidea.rxandroidble2.scan.ScanResult;
@@ -7,7 +7,7 @@ import com.polidea.rxandroidble2.scan.ScanResult;
  * Created by Lipponep on 26.9.2017.
  */
 
-class MyScanResult {
+public class MyScanResult {
     public int rssi;
     public String macAddress;
     public String name;

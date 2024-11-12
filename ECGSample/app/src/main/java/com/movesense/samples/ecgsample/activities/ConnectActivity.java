@@ -1,7 +1,9 @@
-package com.movesense.samples.ecgsample;
+package com.movesense.samples.ecgsample.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -22,6 +24,10 @@ import androidx.core.content.ContextCompat;
 import com.movesense.mds.Mds;
 import com.movesense.mds.MdsConnectionListener;
 import com.movesense.mds.MdsException;
+import com.movesense.samples.ecgsample.layout.CircularButton;
+import com.movesense.samples.ecgsample.movesense_data.MyScanResult;
+import com.movesense.samples.ecgsample.R;
+import com.movesense.samples.ecgsample.services.MeasurementService;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.RxBleDevice;
 import com.polidea.rxandroidble2.scan.ScanSettings;
@@ -35,7 +41,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     // MDS singleton
-    static Mds mMds;
+    public static Mds mMds;
     public static final String URI_CONNECTEDDEVICES = "suunto://MDS/ConnectedDevices";
     public static final String URI_EVENTLISTENER = "suunto://MDS/EventListener";
     public static final String SCHEME_PREFIX = "suunto://";
@@ -71,7 +77,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
         requestNeededPermissions();
 
         // Initialize Movesense MDS library
-        initMds();
+        initMds();// Iniciar el servicio
     }
 
     private RxBleClient getBleClient() {
@@ -233,12 +239,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
                 for (MyScanResult sr : mScanResArrayList) {
                     if (bleAddress.equals(sr.macAddress)) {
                         // Unsubscribe all from possible
-                        if (sr.connectedSerial != null &&
-                                ECGActivity.s_INSTANCE != null &&
-                                sr.connectedSerial.equals(ECGActivity.s_INSTANCE.connectedSerial)) {
-                            ECGActivity.s_INSTANCE.unsubscribeAll();
-                            ECGActivity.s_INSTANCE.finish();
-                        }
+                        stopService(new Intent(getApplicationContext(), MeasurementService.class));
                         sr.markDisconnected();
                     }
                 }

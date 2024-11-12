@@ -1,5 +1,6 @@
-package com.movesense.samples.ecgsample;
+package com.movesense.samples.ecgsample.helpers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 
@@ -9,6 +10,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.movesense.samples.ecgsample.layout.CustomMarkerView;
+import com.movesense.samples.ecgsample.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -110,6 +113,7 @@ public class GraphPainter {
         graphHistory.getAxisRight().setEnabled(false);
         graphHistory.getDescription().setEnabled(false);
         graphHistory.getXAxis().setValueFormatter(new ValueFormatter() {
+            @SuppressLint("SimpleDateFormat")
             @Override
             public String getFormattedValue(float value) {
                 if (currentPeriod == Period.DAY) {
@@ -130,7 +134,7 @@ public class GraphPainter {
 
         switch (currentPeriod) {
             case DAY:
-                interval = TimeUnit.MINUTES.toMillis(1);
+                interval = TimeUnit.MINUTES.toMillis(10);
                 break;
             case WEEK:
                 interval = TimeUnit.HOURS.toMillis(1);

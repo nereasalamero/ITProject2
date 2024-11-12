@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample;
+package com.movesense.samples.ecgsample.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageButton;
+
+import com.movesense.samples.ecgsample.layout.CircularButton;
+import com.movesense.samples.ecgsample.R;
+import com.movesense.samples.ecgsample.services.MeasurementService;
 
 public class MainActivity extends AppCompatActivity  {
     public static final String SERIAL = "serial";
@@ -29,6 +33,10 @@ public class MainActivity extends AppCompatActivity  {
 
         Intent intent = getIntent();
         connectedSerial = intent.getStringExtra(SERIAL);
+
+        Intent serviceIntent = new Intent(this, MeasurementService.class);
+        serviceIntent.putExtra("connectedSerial", connectedSerial);
+        startService(serviceIntent);
     }
 
     public void onHRClicked(View view) {
@@ -36,7 +44,6 @@ public class MainActivity extends AppCompatActivity  {
 
         // Open the ECGActivity
         Intent intent = new Intent(me, HRActivity.class);
-        intent.putExtra(HRActivity.SERIAL, connectedSerial);
         startActivity(intent);
     }
 
@@ -45,7 +52,6 @@ public class MainActivity extends AppCompatActivity  {
 
         // Open the ECGActivity
         Intent intent = new Intent(me, ECGActivity.class);
-        intent.putExtra(ECGActivity.SERIAL, connectedSerial);
         startActivity(intent);
     }
 
@@ -54,7 +60,6 @@ public class MainActivity extends AppCompatActivity  {
 
         // Open the TempActivity
         Intent intent = new Intent(me, TempActivity.class);
-        intent.putExtra(TempActivity.SERIAL, connectedSerial);
         startActivity(intent);
     }
 }

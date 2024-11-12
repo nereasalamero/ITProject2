@@ -1,6 +1,9 @@
-package com.movesense.samples.ecgsample;
+package com.movesense.samples.ecgsample.helpers;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -28,8 +31,8 @@ public class DataFetcher {
     private final OkHttpClient client;
     private static final String LOG_TAG = DataFetcher.class.getSimpleName();
     private String token;
-    //private final String baseUrl = "https://iot.ai.ky.local";
-    private final String baseUrl = "http://192.168.42.163:8080";
+    private final String baseUrl = "https://iot.ai.ky.local";
+    //private final String baseUrl = "http://192.168.42.163:8080";
 
     public DataFetcher() {
         client = getUnsafeOkHttpClient();
@@ -121,5 +124,39 @@ public class DataFetcher {
                 .build();
 
         client.newCall(telemetryRequest).enqueue(callback);
+    }
+
+    public void sendValueToThingsBoard(double value, String measurement) {
+        String url = baseUrl + "/api/v1/G2udVwz0pfW8388kOSjV/telemetry";
+        String json = "{\"" + measurement + "\":" + value + "}";
+
+        RequestBody body = RequestBody.create(json, JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        // Send the request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                // Mostrar un Toast con el mensaje de error
+                Log.e(LOG_TAG, "Failure: ", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    // Mostrar un Toast de éxito
+                    if (response.body() != null) {
+                        Log.e(LOG_TAG, "Success: " + response.body().string());
+                    }
+                } else {
+                    // Mostrar un Toast con el código de respuesta
+                    Log.e(LOG_TAG, "Error: " + response.code());
+                }
+            }
+        });
+
     }
 }
