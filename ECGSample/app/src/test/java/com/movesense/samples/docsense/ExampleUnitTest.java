@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample;
+package com.movesense.samples.docsense;
 
 import org.junit.Test;
 

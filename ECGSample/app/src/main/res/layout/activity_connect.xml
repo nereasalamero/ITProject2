@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#B8FBE0"
-    tools:context="com.movesense.samples.ecgsample.activities.ConnectActivity">
+    tools:context="com.movesense.samples.docsense.activities.ConnectActivity">
 
     <!-- Botón circular a la izquierda -->
 

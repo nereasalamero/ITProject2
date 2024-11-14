@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.helpers;
+package com.movesense.samples.docsense.helpers;
 
 import android.content.Context;
 import android.util.Log;

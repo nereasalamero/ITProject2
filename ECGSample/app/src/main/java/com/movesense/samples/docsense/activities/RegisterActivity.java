@@ -1,4 +1,4 @@
-package com.movesense.sample.docsense;
+package com.movesense.samples.docsense.activities;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.movesense.samples.docsense.R;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText emailRegister, passwordRegister, confirmPasswordRegister;

@@ -3,13 +3,13 @@ apply plugin: 'com.android.application'
 android {
     compileSdk 33
     defaultConfig {
-        applicationId "com.movesense.samples.ecgsample2"
+        applicationId "com.movesense.samples.docsense"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        archivesBaseName = "ECGSample2-$versionName"
+        archivesBaseName = "DocSense-$versionName"
     }
     if(project.hasProperty("RELEASE_STORE_FILE")) {
         signingConfigs {
@@ -40,7 +40,7 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
-    namespace 'com.movesense.samples.ecgsample'
+    namespace 'com.movesense.samples.docsense'
 }
 
 allprojects {

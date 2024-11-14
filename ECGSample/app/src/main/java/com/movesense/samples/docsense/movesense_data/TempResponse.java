@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.movesense_data;
+package com.movesense.samples.docsense.movesense_data;
 
 import com.google.gson.annotations.SerializedName;
 

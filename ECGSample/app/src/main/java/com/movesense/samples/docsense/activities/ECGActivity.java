@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.activities;
+package com.movesense.samples.docsense.activities;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -25,11 +25,11 @@ import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.movesense.samples.ecgsample.layout.CircularButton;
-import com.movesense.samples.ecgsample.helpers.DataFetcher;
-import com.movesense.samples.ecgsample.helpers.GraphPainter;
-import com.movesense.samples.ecgsample.R;
-import com.movesense.samples.ecgsample.services.MeasurementService;
+import com.movesense.samples.docsense.layout.CircularButton;
+import com.movesense.samples.docsense.helpers.DataFetcher;
+import com.movesense.samples.docsense.helpers.GraphPainter;
+import com.movesense.samples.docsense.R;
+import com.movesense.samples.docsense.services.MeasurementService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

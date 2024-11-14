@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.movesense_data;
+package com.movesense.samples.docsense.movesense_data;
 
 /**
  * Created by lipponep on 22.11.2017.

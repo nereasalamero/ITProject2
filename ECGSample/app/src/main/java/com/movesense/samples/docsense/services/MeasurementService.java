@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.services;
+package com.movesense.samples.docsense.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -13,11 +13,11 @@ import com.movesense.mds.MdsException;
 import com.movesense.mds.MdsNotificationListener;
 import com.movesense.mds.MdsResponseListener;
 import com.movesense.mds.MdsSubscription;
-import com.movesense.samples.ecgsample.activities.ConnectActivity;
-import com.movesense.samples.ecgsample.helpers.DataFetcher;
-import com.movesense.samples.ecgsample.movesense_data.ECGResponse;
-import com.movesense.samples.ecgsample.movesense_data.HRResponse;
-import com.movesense.samples.ecgsample.movesense_data.TempResponse;
+import com.movesense.samples.docsense.activities.ConnectActivity;
+import com.movesense.samples.docsense.helpers.DataFetcher;
+import com.movesense.samples.docsense.movesense_data.ECGResponse;
+import com.movesense.samples.docsense.movesense_data.HRResponse;
+import com.movesense.samples.docsense.movesense_data.TempResponse;
 
 public class MeasurementService extends Service {
 

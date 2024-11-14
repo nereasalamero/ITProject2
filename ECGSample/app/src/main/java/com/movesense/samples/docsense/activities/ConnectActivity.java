@@ -1,9 +1,7 @@
-package com.movesense.samples.ecgsample.activities;
+package com.movesense.samples.docsense.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,11 +22,11 @@ import androidx.core.content.ContextCompat;
 import com.movesense.mds.Mds;
 import com.movesense.mds.MdsConnectionListener;
 import com.movesense.mds.MdsException;
-import com.movesense.samples.ecgsample.helpers.DataFetcher;
-import com.movesense.samples.ecgsample.layout.CircularButton;
-import com.movesense.samples.ecgsample.movesense_data.MyScanResult;
-import com.movesense.samples.ecgsample.R;
-import com.movesense.samples.ecgsample.services.MeasurementService;
+import com.movesense.samples.docsense.helpers.DataFetcher;
+import com.movesense.samples.docsense.layout.CircularButton;
+import com.movesense.samples.docsense.movesense_data.MyScanResult;
+import com.movesense.samples.docsense.services.MeasurementService;
+import com.movesense.samples.docsense.R;
 import com.polidea.rxandroidble2.RxBleClient;
 import com.polidea.rxandroidble2.RxBleDevice;
 import com.polidea.rxandroidble2.scan.ScanSettings;
@@ -68,7 +66,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
         circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
 
         // Init Scan UI
-        mScanResultListView = (ListView)findViewById(R.id.listScanResult);
+        mScanResultListView = findViewById(R.id.listScanResult);
         mScanResArrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, mScanResArrayList);
         mScanResultListView.setAdapter(mScanResArrayAdapter);

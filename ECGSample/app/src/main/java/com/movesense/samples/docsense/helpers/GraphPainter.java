@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.helpers;
+package com.movesense.samples.docsense.helpers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,8 +10,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.movesense.samples.ecgsample.layout.CustomMarkerView;
-import com.movesense.samples.ecgsample.R;
+import com.movesense.samples.docsense.layout.CustomMarkerView;
+import com.movesense.samples.docsense.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

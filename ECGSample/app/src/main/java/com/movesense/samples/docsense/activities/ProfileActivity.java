@@ -1,10 +1,12 @@
-package com.movesense.sample.docsense;
+package com.movesense.samples.docsense.activities;
 
 import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.movesense.samples.docsense.R;
 
 public class ProfileActivity extends AppCompatActivity {
     private TextView welcomeText;

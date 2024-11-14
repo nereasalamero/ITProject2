@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.layout;
+package com.movesense.samples.docsense.layout;
 
 import android.content.Context;
 import android.widget.TextView;
@@ -6,7 +6,7 @@ import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
-import com.movesense.samples.ecgsample.R;
+import com.movesense.samples.docsense.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

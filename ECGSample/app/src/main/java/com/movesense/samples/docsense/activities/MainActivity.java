@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.activities;
+package com.movesense.samples.docsense.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,9 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageButton;
 
-import com.movesense.samples.ecgsample.layout.CircularButton;
-import com.movesense.samples.ecgsample.R;
-import com.movesense.samples.ecgsample.services.MeasurementService;
+import com.movesense.samples.docsense.layout.CircularButton;
+import com.movesense.samples.docsense.R;
+import com.movesense.samples.docsense.services.MeasurementService;
 
 public class MainActivity extends AppCompatActivity  {
     public static final String SERIAL = "serial";

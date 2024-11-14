@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.layout;
+package com.movesense.samples.docsense.layout;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

@@ -1,4 +1,4 @@
-package com.movesense.samples.ecgsample.movesense_data;
+package com.movesense.samples.docsense.movesense_data;
 
 import com.polidea.rxandroidble2.RxBleDevice;
 import com.polidea.rxandroidble2.scan.ScanResult;

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#B8FBE0"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.movesense.samples.ecgsample.activities.HRActivity"
+    tools:context="com.movesense.samples.docsense.activities.HRActivity"
     tools:showIn="@layout/activity_hr">
 
     <ImageButton
