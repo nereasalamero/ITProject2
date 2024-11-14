@@ -1,0 +1,13 @@
+{
+    "id": {
+        "id": "e2748a30-7659-11ef-bb3c-c31935dd788d"
+    },
+    "createdTime": 1726731389523,
+    "deviceId": {
+        "entityType": "DEVICE",
+        "id": "e26e2190-7659-11ef-bb3c-c31935dd788d"
+    },
+    "credentialsType": "ACCESS_TOKEN",
+    "credentialsId": "G2udVwz0pfW8388kOSjV",
+    "credentialsValue": null
+}

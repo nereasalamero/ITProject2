@@ -165,8 +165,8 @@ public class HRActivity extends AppCompatActivity
         long startTs = timestamps[0];
         long endTs = timestamps[1];
 
-        dataFetcher.authenticateAndFetchData(startTs, endTs,"heart_beat",
-                "e26e2190-7659-11ef-bb3c-c31935dd788d", createHRCallback(startTs, endTs));
+        dataFetcher.authenticateAndFetchData(startTs, endTs,"heart_beat"
+                , createHRCallback(startTs, endTs));
     }
 
     private Callback createHRCallback(long startTs, long endTs) {

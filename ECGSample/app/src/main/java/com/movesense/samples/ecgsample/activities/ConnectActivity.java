@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import com.movesense.mds.Mds;
 import com.movesense.mds.MdsConnectionListener;
 import com.movesense.mds.MdsException;
+import com.movesense.samples.ecgsample.helpers.DataFetcher;
 import com.movesense.samples.ecgsample.layout.CircularButton;
 import com.movesense.samples.ecgsample.movesense_data.MyScanResult;
 import com.movesense.samples.ecgsample.R;
@@ -55,6 +56,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
     private static ArrayList<MyScanResult> mScanResArrayList = new ArrayList<>();
     ArrayAdapter<MyScanResult> mScanResArrayAdapter;
 
+    private DataFetcher dataFetcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,8 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
 
         // Initialize Movesense MDS library
         initMds();// Iniciar el servicio
+
+        dataFetcher = new DataFetcher();
     }
 
     private RxBleClient getBleClient() {
@@ -218,6 +222,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
                         break;
                     }
                 }
+                dataFetcher.getBearerTokenDevice(macAddress);
                 mScanResArrayAdapter.notifyDataSetChanged();
 
                 // Open the MainActivity
@@ -247,6 +252,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
             }
         });
     }
+
 
     private void showConnectionError(MdsException e) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)

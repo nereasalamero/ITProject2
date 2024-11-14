@@ -161,7 +161,7 @@ public class TempActivity extends AppCompatActivity {
         long endTs = timestamps[1];
 
         dataFetcher.authenticateAndFetchData(startTs, endTs,"temperature",
-        "e26e2190-7659-11ef-bb3c-c31935dd788d", createTemperatureCallback(startTs, endTs));
+                createTemperatureCallback(startTs, endTs));
     }
 
     private Callback createTemperatureCallback(long startTs, long endTs) {

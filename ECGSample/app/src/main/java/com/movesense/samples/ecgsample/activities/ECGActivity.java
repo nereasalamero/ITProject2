@@ -169,7 +169,7 @@ public class ECGActivity extends AppCompatActivity
         long endTs = timestamps[1];
 
         dataFetcher.authenticateAndFetchData(startTs, endTs,"ecg",
-                "e26e2190-7659-11ef-bb3c-c31935dd788d", createECGCallback(startTs, endTs));
+                createECGCallback(startTs, endTs));
     }
 
     private Callback createECGCallback(long startTs, long endTs) {

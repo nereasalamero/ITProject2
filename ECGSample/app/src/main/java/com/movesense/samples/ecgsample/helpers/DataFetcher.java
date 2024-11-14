@@ -15,6 +15,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -31,6 +32,8 @@ public class DataFetcher {
     private final OkHttpClient client;
     private static final String LOG_TAG = DataFetcher.class.getSimpleName();
     private String token;
+    private String deviceId;
+    private String device_token;
     private final String baseUrl = "https://iot.ai.ky.local";
     //private final String baseUrl = "http://192.168.42.163:8080";
 
@@ -74,17 +77,138 @@ public class DataFetcher {
         }
     }
 
-    public void authenticateAndFetchData(long startTs, long endTs, String deviceId, String measurement, Callback callback) {
-        // Primer request para obtener el token
+
+    public Request getTokenRequest() {
         String loginUrl = baseUrl + "/api/auth/login";
         String loginJson = "{\"username\":\"s2417022@edu.savonia.fi\", \"password\":\"DocSense123.\"}";
         RequestBody body = RequestBody.create(loginJson, JSON);
-        Request loginRequest = new Request.Builder()
+        return new Request.Builder()
                 .url(loginUrl)
                 .post(body)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .build();
+    }
+
+    public void getBearerTokenDevice(String mac) {
+        Request loginRequest = getTokenRequest();
+        client.newCall(loginRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(LOG_TAG, "Failure: ", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        if (response.body() != null) {
+                            JSONObject jsonResponse = new JSONObject(response.body().string());
+                            token = jsonResponse.getString("token");
+                            getDevices(mac);
+                        }
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, "Failure: ", e);
+                    }
+                } else {
+                    System.out.println("Error in authentication: " + response.code());
+                }
+            }
+        });
+    }
+
+    public void getDevices(String mac) {
+        String url = baseUrl + "/api/tenant/devices?pageSize=10&page=0";
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("Accept", "application/json")
+                .addHeader("X-Authorization", "Bearer " + token)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(LOG_TAG, "Failure: ", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful()) {
+                    try {
+                        if (response.body() != null) {
+                            JSONObject jsonResponse = new JSONObject(response.body().string());
+                            JSONArray devices = jsonResponse.getJSONArray("data");
+
+                            deviceId = null;
+
+                            for (int i = 0; i < devices.length(); i++) {
+                                JSONObject device = devices.getJSONObject(i);
+                                JSONObject additionalInfo = device.getJSONObject("additionalInfo");
+
+                                if (additionalInfo.has("description")) {
+                                    String description = additionalInfo.getString("description");
+                                    if (description.contains("MAC: " + mac)) {
+                                        deviceId = device.getJSONObject("id").getString("id");
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (deviceId != null) {
+                                Log.i(LOG_TAG, "Device ID found for MAC " + mac + ": " + deviceId);
+                                getDeviceAccessToken();
+                            } else {
+                                Log.e(LOG_TAG, "Device ID NOT found for MAC " + mac);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, "Failure: ", e);
+                    }
+                } else {
+                    System.out.println("Error in authentication: " + response.code());
+                }
+            }
+        });
+    }
+
+    public void getDeviceAccessToken() {
+        String url = baseUrl + "/api/device/" + deviceId + "/credentials";
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("Accept", "application/json")
+                .addHeader("X-Authorization", "Bearer " + token)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(LOG_TAG, "Failure: ", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful()) {
+                    try {
+                        if (response.body() != null) {
+                            JSONObject jsonResponse = new JSONObject(response.body().string());
+                            device_token = jsonResponse.getString("credentialsId");
+                            Log.i(LOG_TAG, "Device Access Token: " + device_token);
+                        }
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, "Failure: ", e);
+                    }
+                } else {
+                    System.out.println("Error in authentication: " + response.code());
+                }
+            }
+        });
+    }
+
+    public void authenticateAndFetchData(long startTs, long endTs, String measurement, Callback callback) {
+        // Primer request para obtener el token
+        Request loginRequest = getTokenRequest();
 
         client.newCall(loginRequest).enqueue(new Callback() {
             @Override
@@ -99,7 +223,7 @@ public class DataFetcher {
                         if (response.body() != null) {
                             JSONObject jsonResponse = new JSONObject(response.body().string());
                             token = jsonResponse.getString("token");
-                            fetchTelemetryData(startTs, endTs, deviceId, measurement, callback); // Llama a la segunda función usando el token
+                            fetchTelemetryData(startTs, endTs, measurement, callback); // Llama a la segunda función usando el token
                         }
                     } catch (Exception e) {
                         Log.e(LOG_TAG, "Failure: ", e);
@@ -111,7 +235,7 @@ public class DataFetcher {
         });
     }
 
-    private void fetchTelemetryData(long startTs, long endTs, String measurement, String deviceId, Callback callback) {
+    private void fetchTelemetryData(long startTs, long endTs, String measurement, Callback callback) {
         // Segundo request para obtener los datos de telemetría
         String telemetryUrl = baseUrl + "/api/plugins/telemetry/DEVICE/" + deviceId + "/values/timeseries?keys="
                 + measurement + "&startTs=" + startTs + "&endTs=" + endTs + "&limit=10000";
@@ -127,7 +251,7 @@ public class DataFetcher {
     }
 
     public void sendValueToThingsBoard(double value, String measurement) {
-        String url = baseUrl + "/api/v1/G2udVwz0pfW8388kOSjV/telemetry";
+        String url = baseUrl + "/api/v1/" + device_token + "/telemetry";
         String json = "{\"" + measurement + "\":" + value + "}";
 
         RequestBody body = RequestBody.create(json, JSON);
