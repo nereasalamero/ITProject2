@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Movesense ECG Sample 2</string>
+    <string name="app_name">DocSense</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_ecg">ECGActivity</string>
     <string name="title_activity_hr">HRActivity</string>
