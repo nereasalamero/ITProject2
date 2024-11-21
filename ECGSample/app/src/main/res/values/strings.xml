@@ -5,7 +5,8 @@
     <string name="title_activity_hr">HRActivity</string>
     <string name="title_activity_tmp">TmpActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
-    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="title_activity_log_in">LogInActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="instructions_text">This app demonstrates the use of ECG API on Movesense sensor. First scan for BLE devices and then connect to it by clicking it on the list. After connection in established, ECG view will open.</string>
+    <string name="title_connect_activity">Connect Activity</string>
 </resources>

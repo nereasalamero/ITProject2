@@ -9,12 +9,16 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ConnectActivity" android:exported="true">
+        <activity android:name=".activities.LogInActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.ConnectActivity"
+            android:label="@string/title_connect_activity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main"
@@ -30,14 +34,6 @@
         <activity
             android:name=".activities.TempActivity"
             android:label="@string/title_activity_tmp"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".activities.SignInActivity"
-            android:label="@string/title_activity_sign_in"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".activities.RegisterActivity"
-            android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.ProfileActivity"

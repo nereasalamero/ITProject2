@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import com.movesense.mds.Mds;
 import com.movesense.mds.MdsConnectionListener;
 import com.movesense.mds.MdsException;
 import com.movesense.samples.docsense.helpers.DataFetcher;
+import com.movesense.samples.docsense.helpers.SessionDataConnection;
 import com.movesense.samples.docsense.layout.CircularButton;
 import com.movesense.samples.docsense.movesense_data.MyScanResult;
 import com.movesense.samples.docsense.services.MeasurementService;
@@ -55,6 +57,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
     ArrayAdapter<MyScanResult> mScanResArrayAdapter;
 
     private DataFetcher dataFetcher;
+    private SessionDataConnection sessionDataConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
         initMds();// Iniciar el servicio
 
         dataFetcher = new DataFetcher();
+        sessionDataConnection = new SessionDataConnection();
     }
 
     private RxBleClient getBleClient() {
@@ -220,7 +224,8 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
                         break;
                     }
                 }
-                dataFetcher.getBearerTokenDevice(macAddress);
+                Toast.makeText(getApplicationContext(), "Connected to " + macAddress, Toast.LENGTH_SHORT).show();
+                sessionDataConnection.getBearerTokenDevice(macAddress);
                 mScanResArrayAdapter.notifyDataSetChanged();
 
                 // Open the MainActivity
