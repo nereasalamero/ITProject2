@@ -7,35 +7,7 @@
     android:background="#B8FBE0"
     tools:context="com.movesense.samples.docsense.activities.MainActivity">
 
-
-    <ImageButton
-        android:id="@+id/circularButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/circular_button"
-        android:contentDescription="Circular button"
-        android:cropToPadding="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/logo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/userIcon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/circular_button"
-        android:contentDescription="User icon"
-        android:cropToPadding="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/profile" />
+    <include layout="@layout/buttons"/>
 
     <!-- Texto "Connect Device" más abajo -->
     <TextView
