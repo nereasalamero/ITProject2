@@ -18,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.jjoe64.graphview.DefaultLabelFormatter;
@@ -68,12 +67,7 @@ public class ECGActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ecg);
 
-        ImageButton circularButton = findViewById(R.id.circularButton);
-        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
-        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        configureButtons();
 
         dataFetcher = new DataFetcher();
         graphPainter = new GraphPainter("ECG: ", "mV");
@@ -114,6 +108,26 @@ public class ECGActivity extends AppCompatActivity
         ECGActivity.s_INSTANCE = null;
 
         super.onDestroy();
+    }
+
+    public void configureButtons() {
+        ImageButton circularButton = findViewById(R.id.circularButton);
+        ImageButton userIconButton = findViewById(R.id.userIcon);
+
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
+        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
+
+        // Navigate to MainActivity when circularButton is clicked
+        circularButton.setOnClickListener(v -> {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
+        });
+
+        // Navigate to ProfileActivity when userIconButton is clicked
+        userIconButton.setOnClickListener(v -> {
+            Intent profileIntent = new Intent(this, ProfileActivity.class);
+            startActivity(profileIntent);
+        });
     }
 
     private void getAndSetUpClickListeners() {
@@ -186,7 +200,7 @@ public class ECGActivity extends AppCompatActivity
                         if (response.body() != null) {
                             JSONObject jsonResponse = new JSONObject(response.body().string());
                             JSONArray ecgData = jsonResponse.getJSONArray("ecg");
-                            graphPainter.updateGraph(s_INSTANCE, graphHistory, ecgData,
+                            graphPainter.updateGraph(s_INSTANCE, graphHistory, ecgData, "ECG",
                                     startTs, endTs);
                         }
                     } catch (Exception e) {

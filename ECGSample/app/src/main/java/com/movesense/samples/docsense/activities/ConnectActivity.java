@@ -56,7 +56,6 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
     private static ArrayList<MyScanResult> mScanResArrayList = new ArrayList<>();
     ArrayAdapter<MyScanResult> mScanResArrayAdapter;
 
-    private DataFetcher dataFetcher;
     private SessionDataConnection sessionDataConnection;
 
     @Override
@@ -64,9 +63,7 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
-        ImageButton circularButton = findViewById(R.id.circularButton);
-        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
-        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
+        configureButtons();
 
         // Init Scan UI
         mScanResultListView = findViewById(R.id.listScanResult);
@@ -82,8 +79,21 @@ public class ConnectActivity extends AppCompatActivity implements AdapterView.On
         // Initialize Movesense MDS library
         initMds();// Iniciar el servicio
 
-        dataFetcher = new DataFetcher();
         sessionDataConnection = new SessionDataConnection();
+    }
+
+    public void configureButtons() {
+        ImageButton circularButton = findViewById(R.id.circularButton);
+        ImageButton userIconButton = findViewById(R.id.userIcon);
+
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
+        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
+
+        // Navigate to ProfileActivity when userIconButton is clicked
+        userIconButton.setOnClickListener(v -> {
+            Intent profileIntent = new Intent(this, ProfileActivity.class);
+            startActivity(profileIntent);
+        });
     }
 
     private RxBleClient getBleClient() {

@@ -18,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.jjoe64.graphview.GraphView;
@@ -66,12 +65,7 @@ public class TempActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp);
 
-        ImageButton circularButton = findViewById(R.id.circularButton);
-        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
-        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
-
-        Toolbar toolbar =  findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        configureButtons();
 
         dataFetcher = new DataFetcher();
         graphPainter = new GraphPainter("Temp: ", "°C");
@@ -108,6 +102,26 @@ public class TempActivity extends AppCompatActivity {
         TempActivity.s_INSTANCE = null;
 
         super.onDestroy();
+    }
+
+    public void configureButtons() {
+        ImageButton circularButton = findViewById(R.id.circularButton);
+        ImageButton userIconButton = findViewById(R.id.userIcon);
+
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
+        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
+
+        // Navigate to MainActivity when circularButton is clicked
+        circularButton.setOnClickListener(v -> {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
+        });
+
+        // Navigate to ProfileActivity when userIconButton is clicked
+        userIconButton.setOnClickListener(v -> {
+            Intent profileIntent = new Intent(this, ProfileActivity.class);
+            startActivity(profileIntent);
+        });
     }
 
     private void getAndSetUpClickListeners() {
@@ -179,7 +193,7 @@ public class TempActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(response.body().string());
                             JSONArray temperatureData = jsonResponse.getJSONArray("temperature");
                             graphPainter.updateGraph(s_INSTANCE, graphHistory, temperatureData,
-                                    startTs, endTs);
+                                    "Temperature", startTs, endTs);
                         }
                     } catch (Exception e) {
                         Log.e(LOG_TAG, "Failure: ", e);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,11 +13,184 @@
         android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="Welcome to your profile!"
         android:textSize="24sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/label_name"
+        android:layout_marginTop="120dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Name Label -->
+    <TextView
+        android:id="@+id/label_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintTop_toBottomOf="@id/welcome_text"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="50dp" />
+
+    <!-- Name Value -->
+    <TextView
+        android:id="@+id/value_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="N/A"
+        android:textSize="18sp"
+        android:textColor="@color/text_secondary"
+        android:ellipsize="none"
+        android:breakStrategy="simple"
+        android:gravity="end"
+        android:scrollHorizontally="false"
+        app:layout_constraintTop_toTopOf="@id/label_name"
+        app:layout_constraintBaseline_toBaselineOf="@id/label_name"
+        app:layout_constraintStart_toEndOf="@id/label_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="50dp" />
+
+    <!-- Last Name Label -->
+    <TextView
+        android:id="@+id/label_last_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last name:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintTop_toBottomOf="@id/label_name"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp" />
+
+    <!-- Last Name Value -->
+    <TextView
+        android:id="@+id/value_last_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="N/A"
+        android:textSize="18sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="end"
+        android:ellipsize="none"
+        android:breakStrategy="simple"
+        android:scrollHorizontally="false"
+        app:layout_constraintTop_toTopOf="@id/label_last_name"
+        app:layout_constraintBaseline_toBaselineOf="@id/label_last_name"
+        app:layout_constraintStart_toEndOf="@id/label_last_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="50dp" />
+
+    <TextView
+        android:id="@+id/label_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintTop_toBottomOf="@id/label_last_name"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp" />
+
+    <!-- Email Value -->
+    <TextView
+        android:id="@+id/value_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="N/A"
+        android:textSize="18sp"
+        android:textColor="@color/text_secondary"
+        android:ellipsize="none"
+        android:breakStrategy="simple"
+        android:gravity="end"
+        android:scrollHorizontally="false"
+        app:layout_constraintTop_toTopOf="@id/label_email"
+        app:layout_constraintBaseline_toBaselineOf="@id/label_email"
+        app:layout_constraintStart_toEndOf="@id/label_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="50dp" />
+
+    <!-- Birth date Label -->
+    <TextView
+        android:id="@+id/label_birth_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Birth date:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintTop_toBottomOf="@id/label_email"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp" />
+
+    <!-- Birth Date Value -->
+    <TextView
+        android:id="@+id/value_birth_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="N/A"
+        android:textSize="18sp"
+        android:textColor="@color/text_secondary"
+        android:ellipsize="none"
+        android:breakStrategy="simple"
+        android:gravity="end"
+        android:scrollHorizontally="false"
+        app:layout_constraintTop_toTopOf="@id/label_birth_date"
+        app:layout_constraintBaseline_toBaselineOf="@id/label_birth_date"
+        app:layout_constraintStart_toEndOf="@id/label_birth_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="50dp" />
+
+    <!-- Telephone Label -->
+    <TextView
+        android:id="@+id/label_telephone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Telephone:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintTop_toBottomOf="@id/label_birth_date"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp" />
+
+    <!-- Telephone Value -->
+    <TextView
+        android:id="@+id/value_telephone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="N/A"
+        android:textSize="18sp"
+        android:textColor="@color/text_secondary"
+        android:ellipsize="none"
+        android:breakStrategy="simple"
+        android:gravity="end"
+        android:scrollHorizontally="false"
+        app:layout_constraintTop_toTopOf="@id/label_telephone"
+        app:layout_constraintBaseline_toBaselineOf="@id/label_telephone"
+        app:layout_constraintStart_toEndOf="@id/label_telephone"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="50dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

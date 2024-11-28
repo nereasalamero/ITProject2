@@ -27,16 +27,28 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageButton circularButton = findViewById(R.id.circularButton);
-        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
-        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
-
         Intent intent = getIntent();
         connectedSerial = intent.getStringExtra(SERIAL);
+
+        configureButtons();
 
         Intent serviceIntent = new Intent(this, MeasurementService.class);
         serviceIntent.putExtra("connectedSerial", connectedSerial);
         startService(serviceIntent);
+    }
+
+    public void configureButtons() {
+        ImageButton circularButton = findViewById(R.id.circularButton);
+        ImageButton userIconButton = findViewById(R.id.userIcon);
+
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.logo)).getBitmap();
+        circularButton.setImageBitmap(CircularButton.getCircularBitmap(bitmap));
+
+        // Navigate to ProfileActivity when userIconButton is clicked
+        userIconButton.setOnClickListener(v -> {
+            Intent profileIntent = new Intent(this, ProfileActivity.class);
+            startActivity(profileIntent);
+        });
     }
 
     public void onHRClicked(View view) {

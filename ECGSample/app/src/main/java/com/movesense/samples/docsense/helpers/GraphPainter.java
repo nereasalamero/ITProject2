@@ -55,7 +55,7 @@ public class GraphPainter {
         return new long[]{startTs, endTs};
     }
 
-    public void updateGraph(Context context, LineChart graphHistory, JSONArray temperatureData,
+    public void updateGraph(Context context, LineChart graphHistory, JSONArray graphData, String legend,
                             long startTs, long endTs) throws JSONException {
         List<Entry> entries = new ArrayList<>();
         long interval = getInterval();
@@ -64,8 +64,8 @@ public class GraphPainter {
         List<Long> timestamps = new ArrayList<>();
         List<Float> values = new ArrayList<>();
 
-        for (int i = 0; i < temperatureData.length(); i++) {
-            JSONObject obj = temperatureData.getJSONObject(i);
+        for (int i = 0; i < graphData.length(); i++) {
+            JSONObject obj = graphData.getJSONObject(i);
             long timestamp = obj.getLong("ts");
             float value = Float.parseFloat(obj.getString("value"));
             timestamps.add(timestamp);
@@ -89,7 +89,7 @@ public class GraphPainter {
         }
 
         // Configure the dataset for the chart
-        LineDataSet dataSet = new LineDataSet(entries, "Temperature");
+        LineDataSet dataSet = new LineDataSet(entries, legend);
         dataSet.setDrawValues(false); // Disable values on data points
         dataSet.setDrawCircles(true); // Draw circles on data points
         dataSet.setCircleRadius(3f);

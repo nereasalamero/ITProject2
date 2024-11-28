@@ -68,7 +68,7 @@ public class LogInActivity extends AppCompatActivity {
                         Intent intent = new Intent(LogInActivity.this, ConnectActivity.class);
                         SessionInfo.setUsername(username);
                         SessionInfo.setPassword(password);
-                        runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Login succesful: " + username, Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show());
                         startActivity(intent);
                     } catch (Exception e) {
                         Log.e(LOG_TAG, "Failure: ", e);
