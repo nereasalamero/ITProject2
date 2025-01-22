@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context="com.movesense.samples.docsense.activities.MainActivity">
+
+    <include layout="@layout/buttons"/>
+
+    <!-- Texto "Connect Device" más abajo -->
+    <TextView
+        android:id="@+id/textDocsense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DOCSENSE"
+        android:textAllCaps="true"
+        android:textColor="#000000"
+        android:textSize="28sp"
+        app:layout_constraintTop_toBottomOf="@id/circularButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="90dp"
+        android:gravity="center" />
+
+    <!-- Botón de Scan debajo del texto -->
+    <Button
+        android:id="@+id/buttonHeartRate"
+        android:layout_width="360dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="40dp"
+        android:onClick="onHRClicked"
+        android:text="Heart Rate"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@+id/textDocsense"
+        app:layout_constraintRight_toRightOf="@+id/textDocsense"
+        app:layout_constraintTop_toBottomOf="@+id/textDocsense" />
+
+    <Button
+        android:id="@+id/buttonECG"
+        android:layout_width="360dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="30dp"
+        android:onClick="onECGClicked"
+        android:text="Electrocardiography"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@+id/buttonHeartRate"
+        app:layout_constraintRight_toRightOf="@+id/buttonHeartRate"
+        app:layout_constraintTop_toBottomOf="@+id/buttonHeartRate" />
+
+    <Button
+        android:id="@+id/buttonTmp"
+        android:layout_width="360dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="30dp"
+        android:onClick="onTempClicked"
+        android:text="Temperature"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@+id/buttonECG"
+        app:layout_constraintRight_toRightOf="@+id/buttonECG"
+        app:layout_constraintTop_toBottomOf="@+id/buttonECG" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

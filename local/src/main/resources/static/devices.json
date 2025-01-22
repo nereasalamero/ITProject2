@@ -1,0 +1,175 @@
+{
+    "data": [
+        {
+            "id": {
+                "entityType": "DEVICE",
+                "id": "3fe720e0-95f6-11ef-a39d-914ae3d0ab8b"
+            },
+            "createdTime": 1730207033838,
+            "tenantId": {
+                "entityType": "TENANT",
+                "id": "5a2cf8e0-7651-11ef-bb3c-c31935dd788d"
+            },
+            "customerId": {
+                "entityType": "CUSTOMER",
+                "id": "13814000-1dd2-11b2-8080-808080808080"
+            },
+            "name": "M5Stack Core IoT Markku",
+            "type": "default",
+            "label": "",
+            "deviceProfileId": {
+                "entityType": "DEVICE_PROFILE",
+                "id": "5a643580-7651-11ef-bb3c-c31935dd788d"
+            },
+            "firmwareId": null,
+            "softwareId": null,
+            "externalId": null,
+            "additionalInfo": {
+                "gateway": false,
+                "overwriteActivityTime": false,
+                "description": "M5Stack Core IoT testing"
+            },
+            "ownerId": {
+                "entityType": "TENANT",
+                "id": "5a2cf8e0-7651-11ef-bb3c-c31935dd788d"
+            },
+            "deviceData": {
+                "configuration": {
+                    "type": "DEFAULT"
+                },
+                "transportConfiguration": {
+                    "type": "DEFAULT"
+                }
+            }
+        },
+        {
+            "id": {
+                "entityType": "DEVICE",
+                "id": "a288dd20-9c2b-11ef-a39d-914ae3d0ab8b"
+            },
+            "createdTime": 1730889669618,
+            "tenantId": {
+                "entityType": "TENANT",
+                "id": "5a2cf8e0-7651-11ef-bb3c-c31935dd788d"
+            },
+            "customerId": {
+                "entityType": "CUSTOMER",
+                "id": "13814000-1dd2-11b2-8080-808080808080"
+            },
+            "name": "Energy Consumption Meter",
+            "type": "default",
+            "label": "",
+            "deviceProfileId": {
+                "entityType": "DEVICE_PROFILE",
+                "id": "5a643580-7651-11ef-bb3c-c31935dd788d"
+            },
+            "firmwareId": null,
+            "softwareId": null,
+            "externalId": null,
+            "additionalInfo": {
+                "gateway": false,
+                "overwriteActivityTime": false,
+                "description": ""
+            },
+            "ownerId": {
+                "entityType": "TENANT",
+                "id": "5a2cf8e0-7651-11ef-bb3c-c31935dd788d"
+            },
+            "deviceData": {
+                "configuration": {
+                    "type": "DEFAULT"
+                },
+                "transportConfiguration": {
+                    "type": "DEFAULT"
+                }
+            }
+        },
+        {
+            "id": {
+                "entityType": "DEVICE",
+                "id": "b94e97f0-7658-11ef-bb3c-c31935dd788d"
+            },
+            "createdTime": 1726730890991,
+            "tenantId": {
+                "entityType": "TENANT",
+                "id": "5a2cf8e0-7651-11ef-bb3c-c31935dd788d"
+            },
+            "customerId": {
+                "entityType": "CUSTOMER",
+                "id": "13814000-1dd2-11b2-8080-808080808080"
+            },
+            "name": "Movesense - 1",
+            "type": "default",
+            "label": "",
+            "deviceProfileId": {
+                "entityType": "DEVICE_PROFILE",
+                "id": "5a643580-7651-11ef-bb3c-c31935dd788d"
+            },
+            "firmwareId": null,
+            "softwareId": null,
+            "externalId": null,
+            "additionalInfo": {
+                "gateway": false,
+                "overwriteActivityTime": false,
+                "description": ""
+            },
+            "ownerId": {
+                "entityType": "TENANT",
+                "id": "5a2cf8e0-7651-11ef-bb3c-c31935dd788d"
+            },
+            "deviceData": {
+                "configuration": {
+                    "type": "DEFAULT"
+                },
+                "transportConfiguration": {
+                    "type": "DEFAULT"
+                }
+            }
+        },
+        {
+            "id": {
+                "entityType": "DEVICE",
+                "id": "e26e2190-7659-11ef-bb3c-c31935dd788d"
+            },
+            "createdTime": 1726731389481,
+            "tenantId": {
+                "entityType": "TENANT",
+                "id": "5a2cf8e0-7651-11ef-bb3c-c31935dd788d"
+            },
+            "customerId": {
+                "entityType": "CUSTOMER",
+                "id": "13814000-1dd2-11b2-8080-808080808080"
+            },
+            "name": "Movesense - 2",
+            "type": "default",
+            "label": "Heart Beat",
+            "deviceProfileId": {
+                "entityType": "DEVICE_PROFILE",
+                "id": "5a643580-7651-11ef-bb3c-c31935dd788d"
+            },
+            "firmwareId": null,
+            "softwareId": null,
+            "externalId": null,
+            "additionalInfo": {
+                "gateway": false,
+                "overwriteActivityTime": false,
+                "description": "Movensense 213530001844\nMAC: 0C:8C:DC:3D:27:E5"
+            },
+            "ownerId": {
+                "entityType": "TENANT",
+                "id": "5a2cf8e0-7651-11ef-bb3c-c31935dd788d"
+            },
+            "deviceData": {
+                "configuration": {
+                    "type": "DEFAULT"
+                },
+                "transportConfiguration": {
+                    "type": "DEFAULT"
+                }
+            }
+        }
+    ],
+    "totalPages": 1,
+    "totalElements": 4,
+    "hasNext": false
+}
